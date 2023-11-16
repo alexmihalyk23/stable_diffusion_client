@@ -12,13 +12,16 @@ import 'package:stable_diffusion_client/local_notification.dart';
 
 double _upscalingValue = 1.0;
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class ImagePage extends StatefulWidget {
   final String base64Image;
   final String serverAddress;
 
-  const ImagePage({Key? key, required this.base64Image, required this.serverAddress}) : super(key: key);
+  const ImagePage(
+      {Key? key, required this.base64Image, required this.serverAddress})
+      : super(key: key);
 
   @override
   _ImagePageState createState() => _ImagePageState();
@@ -114,22 +117,26 @@ class _ImagePageState extends State<ImagePage> {
                     LocalNotification.showBigTextNotification(
                       title: 'Stable Diffusion Client',
                       body: "Изображение Сохранено",
-                      flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
+                      flutterLocalNotificationsPlugin:
+                          flutterLocalNotificationsPlugin,
                     );
                   } else {
                     final directory = await getApplicationDocumentsDirectory();
                     final currentTime = DateTime.now().millisecondsSinceEpoch;
-                    final imagePath = '${directory.path}/image_$currentTime.png';
+                    final imagePath =
+                        '${directory.path}/image_$currentTime.png';
                     final imageFile = File(imagePath);
                     await imageFile.writeAsBytes(base64Decode(Img));
                     LocalNotification.showBigTextNotification(
                       title: 'Stable Diffusion Client',
                       body: "Изображение Сохранено",
-                      flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
+                      flutterLocalNotificationsPlugin:
+                          flutterLocalNotificationsPlugin,
                     );
                   }
                 },
-                child: const Text('Сохранить изображение', style: TextStyle(fontSize: 25)),
+                child: const Text('Сохранить изображение',
+                    style: TextStyle(fontSize: 25)),
               ),
               SizedBox(
                 width: 10,
@@ -141,9 +148,9 @@ class _ImagePageState extends State<ImagePage> {
                   onPressed: !_isButtonDisabled
                       ? null
                       : () {
-                    _isButtonDisabled = false;
-                    loadImage();
-                  },
+                          _isButtonDisabled = false;
+                          loadImage();
+                        },
                   child: const Text(
                     'Улучшить изображение',
                     style: TextStyle(fontSize: 25),

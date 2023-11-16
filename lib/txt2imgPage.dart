@@ -1,7 +1,4 @@
-
-
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
@@ -10,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'ImagePage.dart';
 import 'LifecycleEventHandler.dart';
 import 'local_notification.dart';
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 double sliderValue = 10;
 String? dropdownValue = "Webui";
@@ -20,22 +19,24 @@ double secondSliderValue = 64;
 String? modelValue = "Anime.safetensors [b458c54ea7]";
 
 TextEditingController promptController = TextEditingController();
-TextEditingController negativePromptController = TextEditingController(text: "(worst quality, mutated hands and fingers, bad anatomy, wrong anatomy, mutation:1.2)");
+TextEditingController negativePromptController = TextEditingController(
+    text:
+        "(worst quality, mutated hands and fingers, bad anatomy, wrong anatomy, mutation:1.2)");
 TextEditingController serverAddressController = TextEditingController();
 
-
 class txt2imgPage extends StatefulWidget {
-  const txt2imgPage({super.key, required String base64Image, required String serverAddress});
+  const txt2imgPage(
+      {super.key, required String base64Image, required String serverAddress});
 
   @override
   State<txt2imgPage> createState() => _txt2imgPageState();
-
 }
 
-class _txt2imgPageState  extends State<txt2imgPage> {
+class _txt2imgPageState extends State<txt2imgPage> {
   String? base64Image;
   String? srvAddr = serverAddressController.text;
   bool _isButtonDisabled = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -43,25 +44,21 @@ class _txt2imgPageState  extends State<txt2imgPage> {
     LocalNotification.initialize(flutterLocalNotificationsPlugin);
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Txt2Img Page'),
       ),
-
-
       body: SingleChildScrollView(
-        child:
-        Padding(
+        child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.center,
             children: [
               DropdownButton<String>(
                 value:
-                dropdownValue, // Устанавливаем текущее выбранное значение
+                    dropdownValue, // Устанавливаем текущее выбранное значение
                 onChanged: (String? newValue) {
                   setState(() {
                     dropdownValue =
@@ -84,7 +81,9 @@ class _txt2imgPageState  extends State<txt2imgPage> {
                     Map<String, String> modelT = {
                       'sd_model_checkpoint': modelValue.toString()
                     };
-                    http.post(Uri.parse("${serverAddressController.text}/sdapi/v1/options"),
+                    http.post(
+                        Uri.parse(
+                            "${serverAddressController.text}/sdapi/v1/options"),
                         body: jsonEncode(modelT),
                         headers: {
                           'Content-Type': 'application/json'
@@ -167,26 +166,29 @@ class _txt2imgPageState  extends State<txt2imgPage> {
               // Stack(
               //   children: [
 
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                        if (states.contains(MaterialState.disabled)) {
-                          return Colors.orange.withOpacity(0.5); // Измените цвет кнопки при неактивном состоянии
-                        }
-                        return Colors.orange; // Измените цвет кнопки при активном состоянии
-                      }),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      )),
-                      foregroundColor: MaterialStateProperty.all(Colors.white),
-                      minimumSize: MaterialStateProperty.all(const Size(150, 45)),
-                    ),
-                    onPressed: _isButtonDisabled ? null : _handleButtonTap,
-                    child: const Text(
-                      'генерация',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      return Colors.orange.withOpacity(
+                          0.5); // Измените цвет кнопки при неактивном состоянии
+                    }
+                    return Colors
+                        .orange; // Измените цвет кнопки при активном состоянии
+                  }),
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  )),
+                  foregroundColor: MaterialStateProperty.all(Colors.white),
+                  minimumSize: MaterialStateProperty.all(const Size(150, 45)),
+                ),
+                onPressed: _isButtonDisabled ? null : _handleButtonTap,
+                child: const Text(
+                  'генерация',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
               SizedBox(
                 width: 10,
                 height: 10,
@@ -195,24 +197,23 @@ class _txt2imgPageState  extends State<txt2imgPage> {
                 children: [
                   if (_isButtonDisabled)
                     const Positioned(
-
                       child: LinearProgressIndicator(),
                     ),
                 ],
               ),
 
-                // ],),
+              // ],),
               if (base64Image != null)
-
                 GestureDetector(
-                  onTap: () =>
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ImagePage(base64Image: base64Image!, serverAddress: serverAddressController.text!,),
-                        ),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ImagePage(
+                        base64Image: base64Image!,
+                        serverAddress: serverAddressController.text!,
                       ),
+                    ),
+                  ),
                   child: Padding(
                     padding: EdgeInsets.all(16), // Добавление отступа
                     child: Image.memory(
@@ -227,7 +228,6 @@ class _txt2imgPageState  extends State<txt2imgPage> {
                 maxLines: null,
                 decoration: const InputDecoration(
                   hintText: 'Введите адрес сервера',
-
                 ),
                 inputFormatters: [
                   FilteringTextInputFormatter.singleLineFormatter,
@@ -239,6 +239,7 @@ class _txt2imgPageState  extends State<txt2imgPage> {
       ),
     );
   }
+
   void _handleButtonTap() {
     setState(() {
       _isLoading = true;
@@ -265,10 +266,9 @@ class _txt2imgPageState  extends State<txt2imgPage> {
         String base64Image = jsonDecode(response.body)['images'][0];
 
         // if(Platform.isAndroid)
-        if (!lifecycleEventHandler.inBackground){
+        if (!lifecycleEventHandler.inBackground) {
           print("dddddddddd");
-        }
-        else {
+        } else {
           LocalNotification.showBigTextNotification(
               title: 'Stable Diffusion Client',
               body: "Изображение Сгенерированно",
@@ -298,8 +298,4 @@ class _txt2imgPageState  extends State<txt2imgPage> {
       });
     });
   }
-
-
 }
-
-
