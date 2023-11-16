@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=stable_diffusion_client
+Comment=A new Flutter project.
+Icon=ru.startup.stable_diffusion_client
+Exec=/usr/bin/ru.startup.stable_diffusion_client
+X-Nemo-Application-Type=silica-qt5
+
+[X-Application]
+Permissions=PushNotifications;Internet;MediaIndexing;RemovableMedia;UserDirs
+OrganizationName=ru.startup
+ApplicationName=stable_diffusion_client
