@@ -10,6 +10,8 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:stable_diffusion_client/local_notification.dart';
 
+
+
 double _upscalingValue = 1.0;
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =

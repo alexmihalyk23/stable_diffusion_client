@@ -13,6 +13,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 double sliderValue = 10;
 String? dropdownValue = "Webui";
+String? dropdownVal = "f";
 bool _isLoading = false;
 double firstSliderValue = 64;
 double secondSliderValue = 64;
@@ -34,6 +35,8 @@ class txt2imgPage extends StatefulWidget {
 
 class _txt2imgPageState extends State<txt2imgPage> {
   String? base64Image;
+  List<String> lorasList = [];
+
   String? srvAddr = serverAddressController.text;
   bool _isButtonDisabled = false;
 
@@ -56,23 +59,23 @@ class _txt2imgPageState extends State<txt2imgPage> {
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              DropdownButton<String>(
-                value:
-                    dropdownValue, // Устанавливаем текущее выбранное значение
-                onChanged: (String? newValue) {
-                  setState(() {
-                    dropdownValue =
-                        newValue; // Обновляем выбранное значение при изменении
-                  });
-                },
-                items: <String>['Webui', 'cpp']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
+              // DropdownButton<String>(
+              //   value:
+              //       dropdownValue, // Устанавливаем текущее выбранное значение
+              //   onChanged: (String? newValue) {
+              //     setState(() {
+              //       dropdownValue =
+              //           newValue; // Обновляем выбранное значение при изменении
+              //     });
+              //   },
+              //   items: <String>['Webui', 'cpp']
+              //       .map<DropdownMenuItem<String>>((String value) {
+              //     return DropdownMenuItem<String>(
+              //       value: value,
+              //       child: Text(value),
+              //     );
+              //   }).toList(),
+              // ),
               DropdownButton<String>(
                 value: modelValue,
                 onChanged: (String? newValue) {
@@ -123,6 +126,50 @@ class _txt2imgPageState extends State<txt2imgPage> {
                   hintStyle: TextStyle(color: Colors.red),
                 ),
               ),
+
+
+              // ElevatedButton(
+              //   style: ButtonStyle(
+              //     backgroundColor:
+              //     MaterialStateProperty.resolveWith<Color>((states) {
+              //       if (states.contains(MaterialState.disabled)) {
+              //         return Colors.orange.withOpacity(
+              //             0.5); // Измените цвет кнопки при неактивном состоянии
+              //       }
+              //       return Colors
+              //           .orange; // Измените цвет кнопки при активном состоянии
+              //     }),
+              //     shape: MaterialStateProperty.all(RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(25),
+              //     )),
+              //     foregroundColor: MaterialStateProperty.all(Colors.white),
+              //     minimumSize: MaterialStateProperty.all(const Size(150, 45)),
+              //   ),
+              //   onPressed: _isButtonDisabled ? null : _getLoras,
+              //   child: const Text(
+              //     'Loras',
+              //     style: TextStyle(fontSize: 20),
+              //   ),
+              // ),
+
+              // Добавить DropdownMenu для выбора Loras
+              DropdownButton<String>(
+                value: dropdownVal,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    dropdownVal = newValue;
+                    promptController.text+=" <lora:$dropdownVal:0.75>,";
+                  });
+                },
+                items: lorasList.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+
+
               Slider(
                 value: firstSliderValue,
                 min: 64,
@@ -240,7 +287,25 @@ class _txt2imgPageState extends State<txt2imgPage> {
     );
   }
 
+  void _getLoras() async {
+    String serverAddress = serverAddressController.text;
+    var url = Uri.parse("$serverAddress/sdapi/v1/loras");
+    var response = await http.get(url);
+
+    List<dynamic> jsonList = json.decode(response.body);
+    lorasList.clear();
+    for (var item in jsonList) {
+      String name = item['name'];
+      lorasList.add(name);
+    }
+    setState(() {});
+  }
+
+
+
+
   void _handleButtonTap() {
+    _getLoras();
     setState(() {
       _isLoading = true;
     });
